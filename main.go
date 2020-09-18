@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	usage = "usage: verifyimg -t (jpg|png|gif) IMAGE_FILE"
+	usage = "Usage: verifyimg -t (jpeg|png|gif) <file>"
 )
 
 func main() {
@@ -19,12 +19,8 @@ func main() {
 		imageType string
 	)
 
-	flag.StringVar(&imageType, "t", "", "image type should be either of jpg, png, gif")
+	flag.StringVar(&imageType, "t", "", "image type")
 	flag.Parse()
-	if imageType == "" {
-		fmt.Println(usage)
-		os.Exit(1)
-	}
 
 	file := flag.Arg(0)
 	if file == "" {
@@ -39,21 +35,24 @@ func main() {
 
 	f, err = os.Open(file)
 	if err != nil {
-		fmt.Printf("can't read file: %s\n", file)
+		fmt.Printf("can't open %s\n", file)
 		os.Exit(1)
 	}
 	defer func() { _ = f.Close() }()
 
 	imageType = strings.ToLower(imageType)
 	switch imageType {
-	case "jpg", "jpeg":
+	case "jpeg", "jpg":
 		_, err = jpeg.Decode(f)
 	case "png":
 		_, err = png.Decode(f)
 	case "gif":
 		_, err = gif.Decode(f)
+	case "":
+		fmt.Println(usage)
+		os.Exit(1)
 	default:
-		fmt.Printf("invalid image type %s; either of jpg, png, gif should be specified by -t option\n", imageType)
+		fmt.Printf("invalid image type %s specified; either of jpeg, png, gif should be specified by -t option\n", imageType)
 		os.Exit(1)
 	}
 
@@ -62,5 +61,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s is valid %s image\n", file, imageType)
+	fmt.Println("ok")
 }
