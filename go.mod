@@ -1,3 +1,3 @@
-module github.com/bananaumai/validatimg
+module github.com/bananaumai/veriyimg
 
 go 1.15
