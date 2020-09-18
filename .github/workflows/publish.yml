@@ -1,0 +1,39 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            artifact_name: verifyimg
+            asset_name: verifyimg-linux-amd64
+          - os: darwin
+            artifact_name: verifyimg
+            asset_name: verifyimg-macos-amd64
+          - os: windows
+            artifact_name: verifyimg.exe
+            asset_name: verifyimg-windows-amd64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: GOOS=${{ matrix.os }} GOARCH=amd64 go build -o ${{ matrix.artifact_name }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
