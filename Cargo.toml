@@ -1,0 +1,8 @@
+[package]
+name = "verifyimg"
+version = "0.1.0"
+authors = ["Yuta Shimakawa <banana.umai@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+jpeg-decoder = "0.1"
