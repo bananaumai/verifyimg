@@ -384,10 +384,7 @@ name = "verifyimg"
 version = "0.1.0"
 dependencies = [
  "clap",
- "gif",
  "image",
- "jpeg-decoder",
- "png",
 ]
 
 [[package]]
