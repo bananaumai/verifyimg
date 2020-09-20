@@ -1,11 +1,15 @@
 extern crate clap;
-extern crate gif;
-extern crate jpeg_decoder as jpeg;
-extern crate png;
+extern crate image;
 use clap::{App, Arg};
+use image::{gif, jpeg, png};
 use std::fs::File;
 use std::io::BufReader;
 use std::process;
+
+const JPEG: &str = "jpeg";
+const JPG: &str = "jpg";
+const GIF: &str = "gif";
+const PNG: &str = "png";
 
 fn main() {
     let matches = App::new("verify image")
@@ -15,7 +19,7 @@ fn main() {
             Arg::with_name("format")
                 .value_name("IMAGE_FORMAT")
                 .required(true)
-                .possible_values(&["jpeg", "jpg", "png", "gif"])
+                .possible_values(&[GIF, JPG, JPEG, PNG])
                 .short("f")
                 .long("format")
                 .help("Sets a either of jpeg, png, or gif")
@@ -37,38 +41,18 @@ fn main() {
             process::exit(1);
         }
     };
-
-    match matches.value_of("format").unwrap() {
-        "jpeg" | "jpg" => {
-            let mut dec = jpeg::Decoder::new(BufReader::new(f));
-            match dec.decode() {
-                Ok(_) => println!("OK"),
-                Err(e) => {
-                    println!("{}", e);
-                    process::exit(1)
-                }
-            }
-        }
-        "png" => {
-            let dec = png::Decoder::new(BufReader::new(f));
-            match dec.read_info() {
-                Ok(_) => println!("OK"),
-                Err(e) => {
-                    println!("{}", e);
-                    process::exit(1)
-                }
-            }
-        }
-        "gif" => {
-            let dec = gif::Decoder::new(BufReader::new(f));
-            match dec.read_info() {
-                Ok(_) => println!("OK"),
-                Err(e) => {
-                    println!("{}", e);
-                    process::exit(1)
-                }
-            }
-        }
+    let r = BufReader::new(f);
+    let err = match matches.value_of("format").unwrap() {
+        JPEG | JPG => jpeg::JpegDecoder::new(r).err(),
+        PNG => png::PngDecoder::new(r).err(),
+        GIF => gif::GifDecoder::new(r).err(),
         _ => panic!("invalid format"),
+    };
+    match err {
+        None => println!("OK"),
+        Some(e) => {
+            println!("{}", e);
+            process::exit(1)
+        }
     }
 }

@@ -6,6 +6,7 @@ edition = "2018"
 
 [dependencies]
 clap = "~2.27.0"
+image = "0.23.9"
 gif = "0.10.3"
 jpeg-decoder = "0.1"
 png = "0.16.7"
