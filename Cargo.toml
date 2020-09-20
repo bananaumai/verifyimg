@@ -4,6 +4,11 @@ version = "0.1.0"
 authors = ["Yuta Shimakawa <banana.umai@gmail.com>"]
 edition = "2018"
 
+[[bin]]
+name = "verifyimg"
+test = false
+bench = false
+
 [dependencies]
 clap = "~2.27.0"
 image = "0.23.9"
