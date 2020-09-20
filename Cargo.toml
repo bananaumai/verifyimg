@@ -1,6 +1,6 @@
 [package]
 name = "verifyimg"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Yuta Shimakawa <banana.umai@gmail.com>"]
 edition = "2018"
 description = "simple image verification tool"
@@ -10,6 +10,12 @@ license = "MIT"
 name = "verifyimg"
 test = false
 bench = false
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = 'abort'
 
 [dependencies]
 clap = "~2.27.0"
