@@ -11,16 +11,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: linux
+          - os: ubuntu-latest
             artifact_name: verifyimg
             asset_name: verifyimg-linux-amd64
-          - os: darwin
+          - os: macos-latest
             artifact_name: verifyimg
             asset_name: verifyimg-macos-amd64
-          - os: windows
+          - os: windows-latest
             artifact_name: verifyimg.exe
             asset_name: verifyimg-windows-amd64
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -29,11 +29,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: GOOS=${{ matrix.os }} GOARCH=amd64 go build -o ${{ matrix.artifact_name }}
+        run: cargo build --release
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ matrix.artifact_name }}
+          file: target/release/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
