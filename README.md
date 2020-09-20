@@ -6,10 +6,10 @@ verifyimg is a simple cli tool for verifying the validity of your image file.
 
 ## installation
 
-If you already have Go environment on your machine, it's easiest to use `go get`.
+If you already have Rust environment on your machine, it's easiest to use `cargo`.
 
 ```
-$ go get github.com/bananaumai/verifyimg
+$ cargo install verifyimg
 ```
 
 Or go to [release page](https://github.com/bananaumai/verifyimg/releases/latest) and download the prebuilt binary which is suitable for your platform.
@@ -17,7 +17,7 @@ Or go to [release page](https://github.com/bananaumai/verifyimg/releases/latest)
 ## usage
 
 ```
-$ vefifyimg -t (jpeg|png|gif) {FILE_PATH}
+$ vefifyimg -f <(jpeg|png|gif)> <FILE>
 ```
 
 verifyimg currently supports JPEG, GIF, and PNG image verification.
